@@ -1,14 +1,15 @@
-from django.test import LiveServerTestCase
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 
-class NewVisitorTest(LiveServerTestCase):
+class NewVisitorTest(StaticLiveServerTestCase):
 
     def setUp(self):
         self.browser = webdriver.Firefox()
         self.browser.implicitly_wait(3)
 
     def tearDown(self):
+        self.browser.refresh()
         self.browser.quit()
 
     def check_for_row_in_list_table(self, row_text):
@@ -60,6 +61,7 @@ class NewVisitorTest(LiveServerTestCase):
 
         ## 새로운 브라우저 세션을 이용해서 에디스의 정보가
         ## 쿠키를 통해 유입되는 것을 방지한다
+        self.browser.refresh()
         self.browser.quit()
         self.browser = webdriver.Firefox()
 
@@ -87,7 +89,6 @@ class NewVisitorTest(LiveServerTestCase):
         self.assertIn('우유 사기', page_text)
 
         # 둘다 만족하고 잠자리에 든다
-        self.fail('Finish the test!!')
 
     def test_layout_and_styling(self):
         # 에디스는 메인 페이지를 방문한다
